@@ -1,15 +1,39 @@
 package com.asish.springbootqrcode.model.student;
 
+import com.asish.springbootqrcode.utils.QRCodeGenerator;
+import com.google.zxing.WriterException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
+@RequiredArgsConstructor
+@RestController
+@RequestMapping("/students")
 public class StudentController {
 
-    private StudentService studentService;
+    private final StudentService studentService;
 
-    public ResponseEntity<List<Student>> getStudents(){
+    @GetMapping
+    public ResponseEntity<List<Student>> getStudents() throws IOException, WriterException {
+        List<Student> students = studentService.getStudents();
+        if (students.size() != 0){
+            for (Student student : students){
+                QRCodeGenerator.generateQRCode(student);
+            }
+        }
         return ResponseEntity.ok(studentService.getStudents());
+    }
+
+   @PostMapping
+    public Student addStudent(@RequestBody Student student){
+        return studentService.addStudent(student);
+    }
+
+    @GetMapping("/{id}")
+    public Student findById(@PathVariable("id") Long id){
+        return studentService.findById(id);
     }
 }

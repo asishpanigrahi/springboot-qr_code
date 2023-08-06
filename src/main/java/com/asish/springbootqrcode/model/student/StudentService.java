@@ -12,30 +12,28 @@ import java.util.function.Predicate;
 public class StudentService {
 
     private final StudentRepository studentRepository;
-    private static List<Student> students= new ArrayList();
+    // private static ArrayList<Student> students= new ArrayList();
 
-    public List<Student> findById(int id) {
-        Predicate<? super Student> predicate= todo->todo.getId()==id;
-
-        Student student = students.stream().filter(predicate).findFirst().get();
-
-            return (List<Student>) student;
-        }
-
-
-    public Student addStudent(Student student){
-        return  studentRepository.save(student);
+    //
+    public List<Student> getStudents() {
+        return studentRepository.findAll();
     }
 
-    public Student findById(Long id){
+
+    public Student addStudent(Student student) {
+        return studentRepository.save(student);
+    }
+
+    public Student findById(Long id) {
         return studentRepository.findById(id).
-                orElseThrow(()-> new RuntimeException("Student not found"));
+                orElseThrow(() -> new RuntimeException("Student not found"));
     }
 
 
-    public Student getStudents() {
-        return (Student) studentRepository.findAll();
-    }
+//    public Student getStudents() {
+//        return (Student) studentRepository.findAll();
+//    }
+//}
 }
 
 
